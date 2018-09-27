@@ -1,1 +1,87 @@
 
+MongoDB SETUP
+
+INIT----------------
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+
+sudo apt-get update
+
+sudo apt-get install -y mongodb-org 
+(se fa errore su perl ... etc  ----> ) ( mandare: ) sudo rm /usr/share/doc/libperl5.22/changelog.Debian.gz ( e poi : ) sudo apt-get install -f
+
+poi rifare : 
+
+sudo apt-get install -y mongodb-org 
+
+---------------------
+CHECKING-------------
+
+sudo service mongod start
+sudo service mongod stop
+sudo service mongod restart
+
+mongo --host 127.0.0.1:27017
+
+REMOVING-------------
+
+sudo apt-get purge mongodb-org*
+
+sudo rm -r /var/log/mongodb
+sudo rm -r /var/lib/mongodb
+
+-----------Resolve after manual drop----------
+
+sudo systemctl enable mongod
+sudo service mongod restart
+
+ACTIVATE REMOTE SOURCE------------------------
+
+nano /etc/mongod.conf
+
+?_ BIND IP AS THIS EXAMPLE : 127.0.0.1,46.12.45.66";
+
+sudo service mongod restart
+
+-------------------------------------
+
+CONSOLE AS EXAMPLE
+
+#mongo --host 127.0.0.1:27017
+
+>use test
+switched to db test
+>db.createCollection("persone")
+{ "ok" : 1 }
+
+You can check the created collection by using the command show collections.
+
+>show collections
+persone
+
+>db.persone.insert({ name: "Simone", phone:"000", isActive: true})
+>db.persone.find()
+
+
+-----------------------------SECURING-------------------------------------------------------------
+
+use admin
+db.createUser(
+  {
+    user: "mimone",
+    pwd: "mimonepass",
+    roles: [ { role: "userAdminAnyDatabase", db: "admin", collection: "persone" } ]
+  }
+)
+
+mongo --port 27017 -u mimone -p 'mimonepass' --authenticationDatabase 'admin'
+
+use admin
+db.createUser( { user: "mimonenew",
+                 pwd: "mimonenewpass",
+                 customData: { employeeId: 12345 },
+                 roles: [ { role: "clusterAdmin", db: "admin" },
+                          { role: "readAnyDatabase", db: "admin" },
+                          "readWrite"] },
+               { w: "majority" , wtimeout: 5000 } )
