@@ -22,6 +22,13 @@ sudo service mongod start
 sudo service mongod stop
 sudo service mongod restart
 
+
+// System start :
+
+systemctl enable mongod.service
+
+//
+
 mongo --host 127.0.0.1:27017
 
 REMOVING-------------
