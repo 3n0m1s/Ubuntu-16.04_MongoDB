@@ -92,3 +92,9 @@ db.createUser( { user: "mimonenew",
                           { role: "readAnyDatabase", db: "admin" },
                           "readWrite"] },
                { w: "majority" , wtimeout: 5000 } )
+
+
+PROCEDURA DI BACKUP
+
+Crea backup: mongodump --db nomedatabase
+Rigenera backup: mongorestore --db nomedatabase2 dump/nomedatabase
